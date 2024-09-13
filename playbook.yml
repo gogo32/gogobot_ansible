@@ -42,8 +42,18 @@
         requirements: /home/ubuntu/gogobot/requirements.txt
         virtualenv: /home/ubuntu/gogobot/venv
 
-    - name: Start the application using tmux
+    - name: Playwright install chromium
       shell: |
-        tmux new-session -d -s gogobot "source venv/bin/activate && python3 main.py"
+        . /home/ubuntu/gogobot/venv/bin/activate && playwright install chromium
       args:
         chdir: /home/ubuntu/gogobot/
+
+    - name: Install OpenJDK 17
+      apt:
+        name: openjdk-17-jdk
+        state: present
+
+    - name: Verify Java installation
+      command: java -version
+      register: java_version
+      ignore_errors: yes
