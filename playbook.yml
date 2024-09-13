@@ -1,0 +1,49 @@
+---
+- hosts: all
+  become: true
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install python3-venv and redis server
+      apt:
+        name:
+          - python3-venv
+          - redis-server
+        state: present
+
+    - name: Start and enable redis server
+      systemd:
+        name: redis-server
+        state: started
+        enabled: yes
+
+    - name: Synchronize files to the remote server
+      synchronize:
+        src: ~/Dev/trading/gogobot/
+        dest: /home/ubuntu/gogobot/
+        recursive: yes
+        delete: no
+
+    - name: Check if virtual environment exists
+      stat:
+        path: /home/ubuntu/gogobot/venv/bin/activate
+      register: venv_exists
+
+    - name: Create virtual environment if not exists
+      command: python3 -m venv venv
+      args:
+        chdir: /home/ubuntu/gogobot/
+      when: not venv_exists.stat.exists
+
+    - name: Install Python requirements
+      pip:
+        requirements: /home/ubuntu/gogobot/requirements.txt
+        virtualenv: /home/ubuntu/gogobot/venv
+
+    - name: Start the application using tmux
+      shell: |
+        tmux new-session -d -s gogobot "source venv/bin/activate && python3 main.py"
+      args:
+        chdir: /home/ubuntu/gogobot/

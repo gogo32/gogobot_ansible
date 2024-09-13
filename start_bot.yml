@@ -1,0 +1,9 @@
+---
+- hosts: all
+  become: true
+  tasks:
+    - name: Start the application using tmux
+      shell: |
+        tmux new-session -d -s gogobot "source venv/bin/activate && python3 main.py"
+      args:
+        chdir: /home/ubuntu/gogobot/
