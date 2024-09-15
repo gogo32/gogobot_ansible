@@ -43,9 +43,15 @@
         requirements: /home/ubuntu/gogobot/requirements.txt
         virtualenv: /home/ubuntu/gogobot/venv
 
-    - name: Playwright install chromium
+    - name: Activate virtual environment
       shell: |
-        . /home/ubuntu/gogobot/venv/bin/activate && playwright install chromium
+        . /home/ubuntu/gogobot/venv/bin/activate
+      args:
+        chdir: /home/ubuntu/gogobot/
+
+    - name: Playwright install chromium and dependencies
+      shell: |
+        . /home/ubuntu/gogobot/venv/bin/activate && playwright install --with-deps chromium
       args:
         chdir: /home/ubuntu/gogobot/
 
