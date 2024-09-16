@@ -25,7 +25,23 @@
         src: ~/Dev/trading/gogobot/
         dest: /home/ubuntu/gogobot/
         recursive: yes
-        delete: no
+        delete: yes
+
+    - name: Ensure logs directory exists with correct permissions
+      file:
+        path: /home/ubuntu/gogobot/clientportal.gw
+        state: directory
+        owner: ubuntu
+        group: ubuntu
+        mode: '0755'  # rwx for owner, rx for others
+        recurse: yes
+
+    - name: Verify permissions on the logs directory
+      command: ls -ld /home/ubuntu/gogobot/clientportal.gw/logs
+      register: log_permissions
+
+    - debug:
+        var: log_permissions.stdout
 
     - name: Check if virtual environment exists
       stat:
