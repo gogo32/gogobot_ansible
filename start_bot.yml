@@ -9,6 +9,6 @@
         chdir: /home/ubuntu/gogobot/
     - name: Start the Celery worker using tmux
       shell: |
-        tmux new-session -d -s celery_worker "source venv/bin/activate && celery -A tasks worker"
+        tmux new-session -d -s celery_worker "source venv/bin/activate && celery -A tasks worker -B --loglevel=INFO"
       args:
         chdir: /home/ubuntu/gogobot/
