@@ -2,8 +2,14 @@
 - hosts: all
   become: true
   tasks:
-    - name: Stop the application
+    - name: Stop the gogobot application
       shell: |
-        tmux kill-session -t gogobot
+        tmux kill-session -t gogobot || true
+      args:
+        chdir: /home/ubuntu/gogobot/
+
+    - name: Stop the Celery worker
+      shell: |
+        tmux kill-session -t celery_worker || true
       args:
         chdir: /home/ubuntu/gogobot/
