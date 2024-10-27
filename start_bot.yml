@@ -2,13 +2,8 @@
 - hosts: all
   become: true
   tasks:
-    - name: Start the application using tmux
-      shell: |
-        tmux new-session -d -s gogobot "source venv/bin/activate && python3 start_bot.py --symbols MNQ,MES"
-      args:
-        chdir: /home/ubuntu/gogobot/
     - name: Start the Celery worker using tmux
       shell: |
-        tmux new-session -d -s celery_worker "source venv/bin/activate && celery -A tasks worker -B --loglevel=INFO"
+        tmux new-session -d -s celery_worker "source venv/bin/activate && celery -A tasks worker -B --loglevel=WARNING"
       args:
         chdir: /home/ubuntu/gogobot/
